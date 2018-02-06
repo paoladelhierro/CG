@@ -37,7 +37,10 @@ private:
     QOpenGLDebugLogger *debugLogger;
 
     QTimer timer; // timer used for animation
+    QOpenGLShaderProgram shaderProg;
 
+    GLuint vbo;
+    GLuint vao;
 private slots:
     void onMessageLogged( QOpenGLDebugMessage Message );
 

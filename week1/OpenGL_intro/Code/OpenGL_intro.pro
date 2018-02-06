@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     user_input.cpp
 
 HEADERS  += mainwindow.h \
-    mainview.h
+    mainview.h \
+    vertex.h
 
 FORMS    += mainwindow.ui
 
