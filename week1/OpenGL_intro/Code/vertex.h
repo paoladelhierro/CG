@@ -2,7 +2,7 @@
 #define VERTEX
 
 struct Vertex {
-    float x, y, z, r, g, b;
+    float x, y, r, g, b;
 };
 
 #endif // VERTEX

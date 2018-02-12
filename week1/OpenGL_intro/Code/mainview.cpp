@@ -52,17 +52,24 @@ void MainView::initializeGL() {
     vertex[1].b = 0;
 
     vertex[2].x = 1;
-    vertex[2].y = -1;
+    vertex[2].y = 0;
     vertex[1].r = 0;
     vertex[1].g = 0;
     vertex[1].b = 1;
 
-    glGenBuffers(1, &vbo);
     glGenVertexArrays(1, &vao);
-
     glBindVertexArray(vao);
+
+    glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), 0);
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), 0);
 }
 
 void MainView::resizeGL(int newWidth, int newHeight) {
@@ -72,7 +79,7 @@ void MainView::resizeGL(int newWidth, int newHeight) {
 }
 
 void MainView::paintGL() {
-
+    glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 void MainView::onMessageLogged( QOpenGLDebugMessage Message ) {
