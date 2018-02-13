@@ -45,17 +45,17 @@ void MainView::initializeGL() {
     vertex[0].g = 0;
     vertex[0].b = 0;
 
-    vertex[1].x = 0;
-    vertex[1].y = 1;
+    vertex[1].x = 1;
+    vertex[1].y = -1;
     vertex[1].r = 0;
     vertex[1].g = 1;
     vertex[1].b = 0;
 
-    vertex[2].x = 1;
-    vertex[2].y = 0;
-    vertex[1].r = 0;
-    vertex[1].g = 0;
-    vertex[1].b = 1;
+    vertex[2].x = 0;
+    vertex[2].y = 1;
+    vertex[2].r = 0;
+    vertex[2].g = 0;
+    vertex[2].b = 1;
 
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -66,10 +66,11 @@ void MainView::initializeGL() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), 0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0); // Usually don't normalize (hence GL_FALSE)
 
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), 0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) (2 * sizeof(float)));
+    glClearColor(0.2f, 0.5f, 0.7f, 0.0f);
 }
 
 void MainView::resizeGL(int newWidth, int newHeight) {
