@@ -58,8 +58,8 @@ private:
     void createShaderProgram();
 
     GLuint vbo;
-    GLuint vao;
-
+    GLuint vao1;
+    GLuint vao2;
 };
 
 #endif // MAINVIEW_H

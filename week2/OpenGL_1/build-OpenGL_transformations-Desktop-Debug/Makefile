@@ -374,7 +374,9 @@ main.o: ../Code/main.cpp ../Code/mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../Code/main.cpp
 
 mainwindow.o: ../Code/mainwindow.cpp ../Code/mainwindow.h \
-		ui_mainwindow.h
+		ui_mainwindow.h \
+		../Code/mainview.h \
+		../Code/model.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../Code/mainwindow.cpp
 
 mainview.o: ../Code/mainview.cpp ../Code/mainview.h \

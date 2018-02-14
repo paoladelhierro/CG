@@ -29,6 +29,10 @@ MainView::~MainView() {
     debugLogger->stopLogging();
 
     qDebug() << "MainView destructor";
+
+    glDeleteBuffers(1,&vbo);
+    glDeleteVertexArrays(1,&vao1);
+    glDeleteVertexArrays(1,&vao2);
 }
 
 // --- OpenGL initialization
@@ -71,50 +75,85 @@ void MainView::initializeGL() {
 
     createShaderProgram();
 
-    Vertex v[36];
-    v[0].x = -1; v[1].x = -1; v[2].x = -1; v[3].x = -1;
-    v[0].y = -1; v[1].y = -1; v[2].y =  1; v[3].y =  1;
-    v[0].z = -1; v[1].z =  1; v[2].z = -1; v[3].z =  1;
-    v[0].r =  0; v[1].r =  0; v[2].r =  0; v[3].r =  0;
-    v[0].g =  0; v[1].g =  0; v[2].g =  1; v[3].g =  1;
-    v[0].b =  0; v[1].b =  1; v[2].b =  0; v[3].b =  1;
+    Vertex a, b, c, d, e, f, g, h;
+    a.x = -1; b.x =  1; c.x =  1; d.x = -1;
+    a.y = -1; b.y = -1; c.y = -1; d.y = -1;
+    a.z = -1; b.z = -1; c.z =  1; d.z =  1;
+    a.r =  0; b.r =  0; c.r =  0; d.r =  0;
+    a.g =  0; b.g =  0; c.g =  1; d.g =  1;
+    a.b =  0; b.b =  1; c.b =  0; d.b =  1;
 
-    v[4].x =  1; v[5].x =  1; v[6].x =  1; v[7].x =  1;
-    v[4].y = -1; v[5].y = -1; v[6].y =  1; v[7].y =  1;
-    v[4].z = -1; v[5].z =  1; v[6].z = -1; v[7].z =  1;
-    v[4].r =  1; v[5].r =  1; v[6].r =  1; v[7].r =  1;
-    v[4].g =  0; v[5].g =  0; v[6].g =  1; v[7].g =  1;
-    v[4].b =  0; v[5].b =  1; v[6].b =  0; v[7].b =  1;
+    e.x = -1; f.x =  1; g.x =  1; h.x = -1;
+    e.y =  1; f.y =  1; g.y =  1; h.y =  1;
+    e.z = -1; f.z = -1; g.z =  1; h.z =  1;
+    e.r =  1; f.r =  1; g.r =  1; h.r =  1;
+    e.g =  0; f.g =  0; g.g =  1; h.g =  1;
+    e.b =  0; f.b =  1; g.b =  0; h.b =  1;
 
-    v[0].x = -1; v[1].x = -1; v[2].x =  1;
-    v[0].y = -1; v[1].y = -1; v[2].y = -1;
-    v[0].z = -1; v[1].z =  1; v[2].z = -1;
-    v[0].r =  0; v[1].r =  0; v[2].r =  0;
-    v[0].g =  0; v[1].g =  0; v[2].g =  1;
-    v[0].b =  0; v[1].b =  1; v[2].b =  0;
 
-    v[0].x =  1; v[1].x =  1; v[2].x = -1;
-    v[0].y = -1; v[1].y = -1; v[2].y = -1;
-    v[0].z = -1; v[1].z =  1; v[2].z =  1;
-    v[0].r =  0; v[1].r =  0; v[2].r =  0;
-    v[0].g =  0; v[1].g =  0; v[2].g =  1;
-    v[0].b =  0; v[1].b =  1; v[2].b =  0;
+    Vertex vertices1[36] = {a, b, c, // bottom
+                           a, c, d,
+                           d, c, g, // front
+                           d, c, h,
+                           b, a, e, // back
+                           b, e, f,
+                           h, g, f, // top
+                           h, f, e,
+                           a, d, e, // left
+                           d, h, e,
+                           c, b, f, // right
+                           c, f, g};
 
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    a.x = -1; b.x =  1; c.x =  1; d.x = -1;
+    a.y = -1; b.y = -1; c.y = -1; d.y = -1;
+    a.z =  1; b.z =  1; c.z = -1; d.z = -1;
+    a.r =  1; b.r =  0; c.r =  0; d.r =  0;
+    a.g =  1; b.g =  0; c.g =  1; d.g =  1;
+    a.b =  0; b.b =  1; c.b =  0; d.b =  1;
+
+    e.x =  0; // f.x =  1; g.x =  1; h.x = -1;
+    e.y =  1; // f.y =  1; g.y =  1; h.y =  1;
+    e.z =  0; // f.z = -1; g.z =  1; h.z =  1;
+    e.r =  1; // f.r =  1; g.r =  1; h.r =  1;
+    e.g =  0; // f.g =  0; g.g =  1; h.g =  1;
+    e.b =  0; // f.b =  1; g.b =  0; h.b =  1;
+
+    Vertex vertices2[18] = {a,b,e,
+                            b,c,e,
+                            c,d,e,
+                            d,a,e,
+                            d,c,b,
+                            d,b,a};
+
+    // Cube
+    glGenVertexArrays(1, &vao1);
+    glBindVertexArray(vao1);
 
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-    glBufferData(vbo, sizeof(v), v, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices1), vertices1, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
-    glVertexAttribIPointer(0, 3, GL_FLOAT, sizeof(Vertex), (void*) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) 0);
 
     glEnableVertexAttribArray(1);
-    glVertexAttribIPointer(1, 3, GL_FLOAT, sizeof(Vertex), (void*) (3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE , sizeof(Vertex), (void*) (3 * sizeof(float)));
 
+    // Pyramid
+    glGenVertexArrays(1, &vao2);
+    glBindVertexArray(vao2);
 
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) 0);
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE , sizeof(Vertex), (void*) (3 * sizeof(float)));
 }
 
 void MainView::createShaderProgram()
@@ -135,14 +174,19 @@ void MainView::createShaderProgram()
  * Actual function used for drawing to the screen
  *
  */
-void MainView::paintGL() {
+void MainView :: paintGL() {
     // Clear the screen before rendering
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     shaderProgram.bind();
 
     // Draw here
-    glDrawArrays(GL_TRIANGLES, 0, 8);
+    glBindVertexArray(vao1);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    //glBindVertexArray(vao2);
+    //glDrawArrays(GL_TRIANGLES, 0, 18);
+
 
     shaderProgram.release();
 }
